@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeoBank</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen" class="screen active">
+    <div class="login-card">
+      <div class="bank-logo">
+        <div class="logo-icon">N</div>
+        <span class="logo-text">NeoBank</span>
+      </div>
+      <h2>Welcome back</h2>
+      <p class="subtitle">Sign in to your account</p>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="login-user" placeholder="Enter username" />
+      </div>
+      <div class="form-group">
+        <label>PIN</label>
+        <input type="password" id="login-pin" placeholder="Enter 4-digit PIN" maxlength="4" />
+      </div>
+      <div id="login-error" class="error-msg hidden">Invalid credentials. Try user1/1111 or user2/2222</div>
+      <button class="btn-primary" onclick="login()">Sign In</button>
+      <p class="hint">Demo: <strong>user1</strong> / PIN <strong>1111</strong> &nbsp;|&nbsp; <strong>user2</strong> / PIN <strong>2222</strong></p>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div id="app-screen" class="screen">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">N</div>
+        <span class="logo-text">NeoBank</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" onclick="showTab('dashboard', this)">
+          <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+          Dashboard
+        </a>
+        <a href="#" class="nav-item" onclick="showTab('transactions', this)">
+          <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+          Transactions
+        </a>
+        <a href="#" class="nav-item" onclick="showTab('transfer', this)">
+          <svg viewBox="0 0 24 24"><path d="M21 18h-2V8l-9 9-1.4-1.4 8.5-8.6H8V5h13v13zM3 19h2V5H3v14z"/></svg>
+          Transfer
+        </a>
+        <a href="#" class="nav-item" onclick="showTab('cards', this)">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+          Cards
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-avatar" id="sidebar-avatar">U</div>
+        <div class="user-info">
+          <span id="sidebar-name">User</span>
+          <small>Premium Account</small>
+        </div>
+        <button class="logout-btn" onclick="logout()" title="Logout">
+          <svg viewBox="0 0 24 24"><path d="M17 7l-1.4 1.4 2.6 2.6H9v2h9.2l-2.6 2.6L17 17l5-5-5-5zM5 5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h7v-2H5V5z"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="main-content">
+
+      <!-- DASHBOARD TAB -->
+      <div id="tab-dashboard" class="tab active">
+        <div class="page-header">
+          <div>
+            <h1 id="greeting">Good morning!</h1>
+            <p class="page-subtitle">Here's your financial overview</p>
+          </div>
+          <div class="header-date" id="header-date"></div>
+        </div>
+
+        <!-- BALANCE CARDS -->
+        <div class="balance-grid">
+          <div class="balance-card primary">
+            <div class="card-label">Total Balance</div>
+            <div class="card-amount" id="total-balance">$0.00</div>
+            <div class="card-change positive">+2.4% this month</div>
+            <div class="card-bg-circle"></div>
+          </div>
+          <div class="balance-card">
+            <div class="card-label">Income</div>
+            <div class="card-amount green" id="total-income">$0.00</div>
+            <div class="card-change positive" id="income-label">This month</div>
+          </div>
+          <div class="balance-card">
+            <div class="card-label">Expenses</div>
+            <div class="card-amount red" id="total-expense">$0.00</div>
+            <div class="card-change negative" id="expense-label">This month</div>
+          </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="section-title">Quick Actions</div>
+        <div class="quick-actions">
+          <button class="action-btn" onclick="openModal('deposit-modal')">
+            <div class="action-icon green-bg">
+              <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            </div>
+            <span>Deposit</span>
+          </button>
+          <button class="action-btn" onclick="openModal('withdraw-modal')">
+            <div class="action-icon red-bg">
+              <svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
+            </div>
+            <span>Withdraw</span>
+          </button>
+          <button class="action-btn" onclick="showTab('transfer', document.querySelector('[onclick*=transfer]'))">
+            <div class="action-icon blue-bg">
+              <svg viewBox="0 0 24 24"><path d="M21 18h-2V8l-9 9-1.4-1.4 8.5-8.6H8V5h13v13z"/></svg>
+            </div>
+            <span>Transfer</span>
+          </button>
+          <button class="action-btn" onclick="showTab('cards', document.querySelector('[onclick*=cards]'))">
+            <div class="action-icon purple-bg">
+              <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+            </div>
+            <span>Cards</span>
+          </button>
+        </div>
+
+        <!-- RECENT TRANSACTIONS -->
+        <div class="section-title">Recent Transactions</div>
+        <div class="transactions-list" id="recent-list"></div>
+      </div>
+
+      <!-- TRANSACTIONS TAB -->
+      <div id="tab-transactions" class="tab">
+        <div class="page-header">
+          <div>
+            <h1>Transactions</h1>
+            <p class="page-subtitle">Your complete transaction history</p>
+          </div>
+          <div class="filter-bar">
+            <select id="filter-type" onchange="renderTransactions()">
+              <option value="all">All</option>
+              <option value="credit">Income</option>
+              <option value="debit">Expense</option>
+            </select>
+          </div>
+        </div>
+        <div class="transactions-list" id="all-transactions-list"></div>
+      </div>
+
+      <!-- TRANSFER TAB -->
+      <div id="tab-transfer" class="tab">
+        <div class="page-header">
+          <div>
+            <h1>Transfer Money</h1>
+            <p class="page-subtitle">Send money instantly</p>
+          </div>
+        </div>
+        <div class="transfer-container">
+          <div class="transfer-card">
+            <div class="form-group">
+              <label>From Account</label>
+              <div class="account-display" id="transfer-from-account">Loading...</div>
+            </div>
+            <div class="form-group">
+              <label>Recipient Name</label>
+              <input type="text" id="transfer-to" placeholder="Enter recipient name" />
+            </div>
+            <div class="form-group">
+              <label>Account Number</label>
+              <input type="text" id="transfer-account" placeholder="Enter account number" />
+            </div>
+            <div class="form-group">
+              <label>Amount ($)</label>
+              <input type="number" id="transfer-amount" placeholder="0.00" min="1" />
+            </div>
+            <div class="form-group">
+              <label>Note (optional)</label>
+              <input type="text" id="transfer-note" placeholder="Add a note" />
+            </div>
+            <div id="transfer-error" class="error-msg hidden"></div>
+            <button class="btn-primary" onclick="doTransfer()">Send Money</button>
+          </div>
+          <div class="transfer-info">
+            <div class="info-card">
+              <div class="info-icon">🔒</div>
+              <h4>Secure Transfer</h4>
+              <p>All transfers are encrypted and processed securely.</p>
+            </div>
+            <div class="info-card">
+              <div class="info-icon">⚡</div>
+              <h4>Instant</h4>
+              <p>Money arrives within seconds for NeoBank accounts.</p>
+            </div>
+            <div class="info-card">
+              <div class="info-icon">💸</div>
+              <h4>Zero Fees</h4>
+              <p>No hidden charges on domestic transfers.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARDS TAB -->
+      <div id="tab-cards" class="tab">
+        <div class="page-header">
+          <div>
+            <h1>My Cards</h1>
+            <p class="page-subtitle">Manage your debit & credit cards</p>
+          </div>
+        </div>
+        <div class="cards-container">
+          <div class="virtual-card" id="main-card">
+            <div class="vc-top">
+              <span class="vc-bank">NeoBank</span>
+              <svg class="vc-chip" viewBox="0 0 50 40"><rect x="0" y="10" width="50" height="20" rx="3" fill="rgba(255,255,255,0.4)"/><line x1="17" y1="10" x2="17" y2="30" stroke="rgba(255,255,255,0.6)" stroke-width="1"/><line x1="33" y1="10" x2="33" y2="30" stroke="rgba(255,255,255,0.6)" stroke-width="1"/></svg>
+            </div>
+            <div class="vc-number" id="vc-number">**** **** **** ****</div>
+            <div class="vc-bottom">
+              <div>
+                <div class="vc-label">Card Holder</div>
+                <div class="vc-value" id="vc-name">---</div>
+              </div>
+              <div>
+                <div class="vc-label">Expires</div>
+                <div class="vc-value">12/28</div>
+              </div>
+              <div class="vc-logo">VISA</div>
+            </div>
+          </div>
+          <div class="card-details-panel">
+            <h3>Card Details</h3>
+            <div class="detail-row">
+              <span>Status</span>
+              <span class="badge active">Active</span>
+            </div>
+            <div class="detail-row">
+              <span>Type</span>
+              <span>Visa Debit</span>
+            </div>
+            <div class="detail-row">
+              <span>Daily Limit</span>
+              <span>$5,000</span>
+            </div>
+            <div class="detail-row">
+              <span>Online Payments</span>
+              <span class="badge active">Enabled</span>
+            </div>
+            <div class="detail-row">
+              <span>Contactless</span>
+              <span class="badge active">Enabled</span>
+            </div>
+            <div class="card-actions-row">
+              <button class="btn-outline" onclick="toggleCardNumber()">Show Number</button>
+              <button class="btn-outline danger">Freeze Card</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- DEPOSIT MODAL -->
+  <div id="deposit-modal" class="modal-overlay hidden" onclick="closeModal('deposit-modal', event)">
+    <div class="modal">
+      <h3>Deposit Funds</h3>
+      <div class="form-group">
+        <label>Amount ($)</label>
+        <input type="number" id="deposit-amount" placeholder="Enter amount" min="1" />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <input type="text" id="deposit-desc" placeholder="e.g. Salary, Freelance" />
+      </div>
+      <div id="deposit-error" class="error-msg hidden"></div>
+      <div class="modal-actions">
+        <button class="btn-outline" onclick="closeModal('deposit-modal')">Cancel</button>
+        <button class="btn-primary" onclick="doDeposit()">Deposit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WITHDRAW MODAL -->
+  <div id="withdraw-modal" class="modal-overlay hidden" onclick="closeModal('withdraw-modal', event)">
+    <div class="modal">
+      <h3>Withdraw Funds</h3>
+      <div class="form-group">
+        <label>Amount ($)</label>
+        <input type="number" id="withdraw-amount" placeholder="Enter amount" min="1" />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <input type="text" id="withdraw-desc" placeholder="e.g. ATM Withdrawal" />
+      </div>
+      <div id="withdraw-error" class="error-msg hidden"></div>
+      <div class="modal-actions">
+        <button class="btn-outline" onclick="closeModal('withdraw-modal')">Cancel</button>
+        <button class="btn-primary" onclick="doWithdraw()">Withdraw</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS TOAST -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
